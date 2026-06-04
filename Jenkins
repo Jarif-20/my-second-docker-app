@@ -5,7 +5,7 @@ pipeline {
         // Matches the ID you made in Jenkins earlier
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-login')
         // Your Docker Hub username and the new image name
-        IMAGE_NAME = 'jarif22/my-first-docker-app' 
+        IMAGE_NAME = 'jarif22/my-second-docker-app' 
     }
 
     stages {
