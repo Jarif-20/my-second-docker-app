@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+        // Matches the ID you made in Jenkins earlier
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-login')
+        // Your Docker Hub username and the new image name
+        IMAGE_NAME = 'jarif22/my-first-docker-app' 
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building the Docker Image...'
+                sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} ."
+                sh "docker build -t ${IMAGE_NAME}:latest ."
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo 'Logging in and pushing to Docker Hub...'
+                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin"
+
+                sh "docker push ${IMAGE_NAME}:${BUILD_NUMBER}"
+                sh "docker push ${IMAGE_NAME}:latest"
+            }
+        }
+    }
+
+    post {
+        always {
+            sh "docker logout"
+        }
+    }
+}
